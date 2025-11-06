@@ -24,6 +24,7 @@
                 <li><strong>Kanban Board</strong></li>
             </ul>
             <ul>
+                <li><a href="#" onclick="openLaneModal()">Add Lane</a></li>
                 <li><a href="#" onclick="openCategoryModal()">Manage Categories</a></li>
             </ul>
         </nav>
@@ -65,6 +66,23 @@
                 </div>
                 {% endfor %}
             </div>
+        </article>
+    </dialog>
+
+    <!-- Lane Management Modal -->
+    <dialog id="lane-modal">
+        <article>
+            <header>
+                <a href="#" aria-label="Close" class="close" onclick="closeLaneModal()">×</a>
+                <h3>Add Lane</h3>
+            </header>
+            <form id="lane-form" onsubmit="createLane(event)">
+                <label>
+                    Lane Title
+                    <input type="text" name="title" id="lane-title" placeholder="Enter lane title..." required>
+                </label>
+                <button type="submit">Add Lane</button>
+            </form>
         </article>
     </dialog>
 
