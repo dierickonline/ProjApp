@@ -202,17 +202,65 @@ function loadCategories() {
         });
 }
 
+// Lane Modal Functions
+function openLaneModal() {
+    const modal = document.getElementById('lane-modal');
+    modal.showModal();
+    return false; // Prevent default link behavior
+}
+
+function closeLaneModal() {
+    const modal = document.getElementById('lane-modal');
+    modal.close();
+    return false;
+}
+
+function createLane(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    fetch('/lanes', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(html => {
+        // Add the new lane to the board
+        const board = document.getElementById('board');
+        board.insertAdjacentHTML('beforeend', html);
+
+        // Clear form
+        form.reset();
+
+        // Close modal
+        closeLaneModal();
+
+        // Reinitialize drag and drop
+        initializeDragAndDrop();
+    })
+    .catch(error => {
+        console.error('Error creating lane:', error);
+        alert('Failed to create lane.');
+    });
+}
+
 // Close modals on ESC key (native behavior for dialog element)
 // Close modals on backdrop click
 document.addEventListener('click', function(event) {
     const cardModal = document.getElementById('card-modal');
     const categoryModal = document.getElementById('category-modal');
+    const laneModal = document.getElementById('lane-modal');
 
     if (event.target === cardModal) {
         closeCardModal();
     }
     if (event.target === categoryModal) {
         closeCategoryModal();
+    }
+    if (event.target === laneModal) {
+        closeLaneModal();
     }
 });
 
