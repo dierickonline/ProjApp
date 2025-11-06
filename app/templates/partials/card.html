@@ -1,0 +1,21 @@
+<div class="card" data-card-id="{{ card.id }}" onclick="openCardModal({{ card.id }})">
+    <div class="card-content">
+        <div class="card-title">{{ card.title }}</div>
+        {% if card.categories %}
+        <div class="card-categories">
+            {% for category in card.categories %}
+            <span class="category-badge" style="background-color: {{ category.color }};">
+                {{ category.name }}
+            </span>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <button class="card-delete-btn"
+            hx-delete="/cards/{{ card.id }}"
+            hx-target="closest .card"
+            hx-swap="outerHTML swap:0.3s"
+            hx-confirm="Delete this card?"
+            onclick="event.stopPropagation()"
+            aria-label="Delete card">×</button>
+</div>

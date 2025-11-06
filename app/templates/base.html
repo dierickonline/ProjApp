@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kanban Board{% endblock %}</title>
+
+    <!-- Pico CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+
+    <!-- HTMX -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <!-- SortableJS -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.1/Sortable.min.js"></script>
+</head>
+<body>
+    <header class="container-fluid">
+        <nav>
+            <ul>
+                <li><strong>Kanban Board</strong></li>
+            </ul>
+            <ul>
+                <li><a href="#" onclick="openCategoryModal()">Manage Categories</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Card Detail Modal -->
+    <dialog id="card-modal">
+        <article id="card-modal-content">
+            <!-- Content loaded via HTMX -->
+        </article>
+    </dialog>
+
+    <!-- Category Management Modal -->
+    <dialog id="category-modal">
+        <article>
+            <header>
+                <a href="#" aria-label="Close" class="close" onclick="closeCategoryModal()">×</a>
+                <h3>Manage Categories</h3>
+            </header>
+            <form id="category-form" onsubmit="createCategory(event)">
+                <label>
+                    Category Name
+                    <input type="text" name="name" id="category-name" required>
+                </label>
+                <label>
+                    Color
+                    <input type="color" name="color" id="category-color" value="#3B82F6">
+                </label>
+                <button type="submit">Add Category</button>
+            </form>
+            <div id="categories-list" style="margin-top: 1rem;">
+                {% for category in categories %}
+                <div class="category-item" style="margin-bottom: 0.5rem;">
+                    <span class="category-badge" style="background-color: {{ category.color }};">{{ category.name }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </dialog>
+
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', filename='js/kanban.js') }}"></script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

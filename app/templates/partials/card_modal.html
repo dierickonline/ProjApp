@@ -1,0 +1,44 @@
+<header>
+    <a href="#" aria-label="Close" class="close" onclick="closeCardModal()">×</a>
+    <h3>Card Details</h3>
+</header>
+
+<form hx-put="/cards/{{ card.id }}"
+      hx-target="[data-card-id='{{ card.id }}']"
+      hx-swap="outerHTML"
+      onsubmit="closeCardModal()">
+
+    <label>
+        Title
+        <input type="text" name="title" value="{{ card.title }}" required>
+    </label>
+
+    <label>
+        Description
+        <textarea name="description" rows="4" placeholder="Add a description...">{{ card.description }}</textarea>
+    </label>
+
+    <label>
+        Categories
+        <select name="category_ids" multiple size="5">
+            {% for category in all_categories %}
+            <option value="{{ category.id }}"
+                    {% if category in card.categories %}selected{% endif %}
+                    style="background-color: {{ category.color }}; color: white;">
+                {{ category.name }}
+            </option>
+            {% endfor %}
+        </select>
+        <small>Hold Ctrl/Cmd to select multiple</small>
+    </label>
+
+    <div class="card-metadata">
+        <p><strong>Created:</strong> {{ card.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+        <p><strong>Last Updated:</strong> {{ card.updated_at.strftime('%Y-%m-%d %H:%M') }}</p>
+    </div>
+
+    <footer>
+        <button type="submit">Save Changes</button>
+        <button type="button" class="secondary" onclick="closeCardModal()">Cancel</button>
+    </footer>
+</form>

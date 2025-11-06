@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Add Lane Form -->
+    <div class="add-lane-container">
+        <form hx-post="/lanes" hx-target="#board" hx-swap="beforeend" class="inline-form">
+            <input type="text" name="title" placeholder="Enter lane title..." required>
+            <button type="submit">+ Add Lane</button>
+        </form>
+    </div>
+
+    <!-- Kanban Board -->
+    <div id="board" class="board">
+        {% for lane in lanes %}
+            {% include 'partials/lane.html' %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize drag and drop after page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeDragAndDrop();
+    });
+
+    // Reinitialize after HTMX swaps
+    document.body.addEventListener('htmx:afterSwap', function(event) {
+        if (event.detail.target.id === 'board' || event.detail.target.classList.contains('lane-cards')) {
+            initializeDragAndDrop();
+        }
+    });
+</script>
+{% endblock %}
