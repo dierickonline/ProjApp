@@ -264,9 +264,6 @@ document.addEventListener('click', function(event) {
     }
 });
 
-// Prevent card modal from opening when clicking delete button
-document.addEventListener('click', function(event) {
-    if (event.target.classList.contains('card-delete-btn')) {
-        event.stopPropagation();
-    }
-}, true);
+// Note: The delete button's inline onclick="event.stopPropagation()"
+// prevents the card modal from opening when clicking delete.
+// No additional event listener needed here.

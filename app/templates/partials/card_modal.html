@@ -40,5 +40,12 @@
     <footer>
         <button type="submit">Save Changes</button>
         <button type="button" class="secondary" onclick="closeCardModal()">Cancel</button>
+        <button type="button"
+                class="delete-btn"
+                hx-delete="/cards/{{ card.id }}"
+                hx-target="[data-card-id='{{ card.id }}']"
+                hx-swap="outerHTML swap:0.3s"
+                hx-confirm="Delete this card?"
+                onclick="closeCardModal()">Delete Card</button>
     </footer>
 </form>
