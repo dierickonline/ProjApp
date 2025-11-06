@@ -15,16 +15,7 @@
           hx-swap="beforeend"
           class="add-card-form">
         <input type="hidden" name="lane_id" value="{{ lane.id }}">
-        <div class="card-form-row">
-            <input type="text" name="title" placeholder="Add a card..." required>
-            <select name="category_ids" multiple class="category-select">
-                {% for category in categories %}
-                <option value="{{ category.id }}" style="background-color: {{ category.color }};">
-                    {{ category.name }}
-                </option>
-                {% endfor %}
-            </select>
-        </div>
+        <input type="text" name="title" placeholder="Add a card..." required>
         <button type="submit">+ Add</button>
     </form>
 
