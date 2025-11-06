@@ -105,6 +105,21 @@ header a {
     background-color: rgba(239, 68, 68, 0.1);
 }
 
+/* Modal delete button (has text, needs different styling) */
+dialog footer .delete-btn {
+    width: auto;
+    height: auto;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--delete-color);
+    background-color: white;
+}
+
+dialog footer .delete-btn:hover {
+    background-color: var(--delete-color);
+    color: white;
+}
+
 /* Add Card Form */
 .add-card-form {
     margin-bottom: 1rem;
@@ -211,7 +226,7 @@ header a {
     height: 24px;
     line-height: 1;
     border-radius: 4px;
-    opacity: 0;
+    opacity: 0.3;  /* Slightly visible by default so users can discover it */
     transition: opacity 0.2s, background-color 0.2s;
 }
 
