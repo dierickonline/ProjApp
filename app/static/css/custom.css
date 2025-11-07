@@ -20,16 +20,39 @@ body {
 header {
     background-color: var(--primary);
     margin-bottom: 0;
-    padding: 0.5rem 0;
+    padding: 0.5rem 1rem;
 }
 
 header nav {
-    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    margin: 0;
 }
 
-header strong,
+header strong {
+    color: white !important;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+header .nav-links {
+    display: flex;
+    gap: 1rem;
+}
+
 header a {
     color: white !important;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+header a:hover {
+    background-color: var(--primary-hover);
 }
 
 /* Board Layout */

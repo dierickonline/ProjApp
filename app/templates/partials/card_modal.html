@@ -3,9 +3,10 @@
     <h3>Card Details</h3>
 </header>
 
-<form hx-put="/cards/{{ card.id }}"
+<form hx-post="/cards/{{ card.id }}/update"
       hx-target="[data-card-id='{{ card.id }}']"
       hx-swap="outerHTML"
+      hx-encoding="multipart/form-data"
       onsubmit="closeCardModal()">
 
     <label>

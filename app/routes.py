@@ -84,7 +84,7 @@ def get_card(card_id):
     categories = Category.query.all()
     return render_template('partials/card_modal.html', card=card, all_categories=categories)
 
-@bp.route('/cards/<int:card_id>', methods=['PUT'])
+@bp.route('/cards/<int:card_id>/update', methods=['POST'])
 def update_card(card_id):
     """Update card details"""
     card = Card.query.get_or_404(card_id)
@@ -93,21 +93,38 @@ def update_card(card_id):
     description = request.form.get('description', '').strip()
     category_ids = request.form.getlist('category_ids', type=int)
 
+    # Debug logging
+    print(f"DEBUG: Updating card {card_id}")
+    print(f"DEBUG: Title: {title}")
+    print(f"DEBUG: Description: {description}")
+    print(f"DEBUG: Category IDs received: {category_ids}")
+    print(f"DEBUG: Form data: {request.form}")
+
     if title:
         card.title = title
     if description is not None:
         card.description = description
 
-    # Update categories
+    # Update categories - always process the category selection
+    # category_ids will be a list (empty or with IDs)
     if category_ids:
         categories = Category.query.filter(Category.id.in_(category_ids)).all()
+        print(f"DEBUG: Found categories: {[c.name for c in categories]}")
         card.categories = categories
     else:
+        # Clear all categories if none selected
+        print("DEBUG: Clearing all categories")
         card.categories = []
 
     db.session.commit()
+    print(f"DEBUG: Card categories after commit: {[c.name for c in card.categories]}")
 
     return render_template('partials/card.html', card=card)
+
+@bp.route('/cards/<int:card_id>', methods=['PUT'])
+def move_card_put(card_id):
+    """Update card via PUT (for backward compatibility with drag-drop)"""
+    return move_card(card_id)
 
 @bp.route('/cards/<int:card_id>', methods=['DELETE'])
 def delete_card(card_id):
