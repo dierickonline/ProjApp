@@ -1,4 +1,4 @@
-<div class="card" data-card-id="{{ card.id }}" onclick="openCardModal({{ card.id }})">
+<div class="card" data-card-id="{{ card.id }}" data-position="{{ card.position }}" onclick="openCardModal({{ card.id }})">
     <div class="card-content">
         <div class="card-title">{{ card.title }}</div>
         {% if card.categories %}

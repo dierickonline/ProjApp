@@ -139,15 +139,25 @@ def move_card(card_id):
     """Move card to different lane or position"""
     card = Card.query.get_or_404(card_id)
 
-    new_lane_id = request.json.get('lane_id', type=int)
-    new_position = request.json.get('position', type=float)
+    print(f"DEBUG move_card: card_id={card_id}, current lane_id={card.lane_id}")
+    print(f"DEBUG move_card: request.json={request.json}")
+
+    new_lane_id = request.json.get('lane_id')
+    new_position = request.json.get('position')
+
+    print(f"DEBUG move_card: new_lane_id={new_lane_id}, new_position={new_position}")
 
     if new_lane_id:
-        card.lane_id = new_lane_id
+        card.lane_id = int(new_lane_id)
     if new_position is not None:
-        card.position = new_position
+        card.position = float(new_position)
+
+    print(f"DEBUG move_card: AFTER update - lane_id={card.lane_id}, position={card.position}")
 
     db.session.commit()
+
+    print(f"DEBUG move_card: AFTER commit - lane_id={card.lane_id}, position={card.position}")
+
     return jsonify({'success': True})
 
 @bp.route('/cards/reorder', methods=['PUT'])

@@ -11,8 +11,9 @@
 
     <!-- Add Card Form -->
     <form hx-post="/cards"
-          hx-target=".lane-cards"
+          hx-target="#lane-cards-{{ lane.id }}"
           hx-swap="beforeend"
+          hx-on::after-request="this.reset()"
           class="add-card-form">
         <input type="hidden" name="lane_id" value="{{ lane.id }}">
         <input type="text" name="title" placeholder="Add a card..." required>
@@ -20,7 +21,7 @@
     </form>
 
     <!-- Cards Container -->
-    <div class="lane-cards" data-lane-id="{{ lane.id }}">
+    <div id="lane-cards-{{ lane.id }}" class="lane-cards" data-lane-id="{{ lane.id }}">
         {% for card in lane.cards %}
             {% include 'partials/card.html' %}
         {% endfor %}

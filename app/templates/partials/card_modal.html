@@ -6,17 +6,16 @@
 <form hx-post="/cards/{{ card.id }}/update"
       hx-target="[data-card-id='{{ card.id }}']"
       hx-swap="outerHTML"
-      hx-encoding="multipart/form-data"
-      onsubmit="closeCardModal()">
+      hx-on::after-request="closeCardModal()">
 
     <label>
         Title
-        <input type="text" name="title" value="{{ card.title }}" required>
+        <input type="text" name="title" value="{{ card.title }}" required autocomplete="off">
     </label>
 
     <label>
         Description
-        <textarea name="description" rows="4" placeholder="Add a description...">{{ card.description }}</textarea>
+        <textarea name="description" rows="4" placeholder="Add a description..." autocomplete="off">{{ card.description }}</textarea>
     </label>
 
     <label>

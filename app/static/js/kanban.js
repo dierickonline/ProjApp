@@ -127,6 +127,8 @@ function openCardModal(cardId) {
         .then(response => response.text())
         .then(html => {
             modalContent.innerHTML = html;
+            // Process HTMX attributes in the newly loaded content
+            htmx.process(modalContent);
             modal.showModal();
         })
         .catch(error => {
