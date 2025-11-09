@@ -15,21 +15,26 @@
 
     <label>
         Description
-        <textarea name="description" rows="4" placeholder="Add a description..." autocomplete="off">{{ card.description }}</textarea>
+        <textarea name="description" rows="10" placeholder="Add a description..." autocomplete="off">{{ card.description }}</textarea>
     </label>
 
     <label>
         Categories
-        <select name="category_ids" multiple size="5">
+        <table class="category-checkboxes-table">
             {% for category in all_categories %}
-            <option value="{{ category.id }}"
-                    {% if category in card.categories %}selected{% endif %}
-                    style="background-color: {{ category.color }}; color: white;">
-                {{ category.name }}
-            </option>
+            <tr>
+                <td class="checkbox-cell">
+                    <input type="checkbox"
+                           name="category_ids"
+                           value="{{ category.id }}"
+                           {% if category in card.categories %}checked{% endif %}>
+                </td>
+                <td class="category-cell">
+                    <span class="category-badge" style="background-color: {{ category.color }};">{{ category.name }}</span>
+                </td>
+            </tr>
             {% endfor %}
-        </select>
-        <small>Hold Ctrl/Cmd to select multiple</small>
+        </table>
     </label>
 
     <div class="card-metadata">
@@ -46,6 +51,6 @@
                 hx-target="[data-card-id='{{ card.id }}']"
                 hx-swap="outerHTML swap:0.3s"
                 hx-confirm="Delete this card?"
-                onclick="closeCardModal()">Delete Card</button>
+                onclick="closeCardModal()">X</button>
     </footer>
 </form>

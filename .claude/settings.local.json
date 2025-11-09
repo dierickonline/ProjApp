@@ -12,7 +12,11 @@
       "Bash(./venv/Scripts/python.exe:*)",
       "Bash(\"d:\\Projects\\ProjApp\\venv\\Scripts\\python.exe\" -m flask:*)",
       "Bash(python -m flask:*)",
-      "Bash(python migrate_to_boards.py:*)"
+      "Bash(python migrate_to_boards.py:*)",
+      "Bash(cat:*)",
+      "Bash(tasklist:*)",
+      "Bash(sqlite3:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []

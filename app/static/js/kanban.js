@@ -129,7 +129,7 @@ function openCardModal(cardId) {
             modalContent.innerHTML = html;
             // Process HTMX attributes in the newly loaded content
             htmx.process(modalContent);
-            modal.showModal();
+            modal.style.display = 'flex';
         })
         .catch(error => {
             console.error('Error loading card details:', error);
@@ -139,7 +139,7 @@ function openCardModal(cardId) {
 
 function closeCardModal() {
     const modal = document.getElementById('card-modal');
-    modal.close();
+    modal.style.display = 'none';
     return false; // Prevent default link behavior
 }
 
@@ -147,13 +147,13 @@ function closeCardModal() {
 function openCategoryModal() {
     const modal = document.getElementById('category-modal');
     loadCategories();
-    modal.showModal();
+    modal.style.display = 'flex';
     return false; // Prevent default link behavior
 }
 
 function closeCategoryModal() {
     const modal = document.getElementById('category-modal');
-    modal.close();
+    modal.style.display = 'none';
     return false;
 }
 
@@ -244,26 +244,26 @@ function deleteCategory(categoryId) {
 // Lane Modal Functions
 function openLaneModal() {
     const modal = document.getElementById('lane-modal');
-    modal.showModal();
+    modal.style.display = 'flex';
     return false;
 }
 
 function closeLaneModal() {
     const modal = document.getElementById('lane-modal');
-    modal.close();
+    modal.style.display = 'none';
     return false;
 }
 
 // Board Modal Functions
 function openBoardModal() {
     const modal = document.getElementById('board-modal');
-    modal.showModal();
+    modal.style.display = 'flex';
     return false;
 }
 
 function closeBoardModal() {
     const modal = document.getElementById('board-modal');
-    modal.close();
+    modal.style.display = 'none';
     return false;
 }
 
@@ -276,25 +276,80 @@ function switchBoard(boardId) {
     form.submit();
 }
 
-// Close modals on ESC key (native behavior for dialog element)
+function switchToBoard(boardId) {
+    // Alias for switchBoard (used in board management modal)
+    switchBoard(boardId);
+}
+
+function editBoard(boardId) {
+    // Hide display, show edit form
+    document.getElementById(`board-display-${boardId}`).style.display = 'none';
+    document.getElementById(`board-edit-${boardId}`).style.display = 'block';
+}
+
+function cancelEditBoard(boardId) {
+    // Show display, hide edit form
+    document.getElementById(`board-display-${boardId}`).style.display = 'block';
+    document.getElementById(`board-edit-${boardId}`).style.display = 'none';
+}
+
+function saveBoard(boardId) {
+    const name = document.getElementById(`board-name-${boardId}`).value.trim();
+    const description = document.getElementById(`board-desc-${boardId}`).value.trim();
+
+    if (!name) {
+        alert('Board name is required');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+
+    fetch(`/boards/${boardId}/update`, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            // Reload the page to show updated board
+            location.reload();
+        } else {
+            throw new Error('Failed to update board');
+        }
+    })
+    .catch(error => {
+        console.error('Error updating board:', error);
+        alert('Failed to update board.');
+    });
+}
+
+function deleteBoard(boardId) {
+    if (!confirm('Delete this board and all its lanes/cards?')) {
+        return;
+    }
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/boards/${boardId}/delete`;
+    document.body.appendChild(form);
+    form.submit();
+}
+
 // Close modals on backdrop click
 document.addEventListener('click', function(event) {
-    const cardModal = document.getElementById('card-modal');
-    const categoryModal = document.getElementById('category-modal');
-    const laneModal = document.getElementById('lane-modal');
-    const boardModal = document.getElementById('board-modal');
+    // Close modal if clicking on the overlay background (not the modal content)
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.style.display = 'none';
+    }
+});
 
-    if (event.target === cardModal) {
-        closeCardModal();
-    }
-    if (event.target === categoryModal) {
-        closeCategoryModal();
-    }
-    if (event.target === laneModal) {
-        closeLaneModal();
-    }
-    if (event.target === boardModal) {
-        closeBoardModal();
+// Close modals on ESC key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.style.display = 'none';
+        });
     }
 });
 

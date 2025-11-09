@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Kanban Board{% endblock %}</title>
 
-    <!-- Pico CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <!-- Pico CSS-->
+  
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}?v=6">
 
     <!-- HTMX -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
@@ -46,77 +46,86 @@
    
 
     <!-- Card Detail Modal -->
-    <dialog id="card-modal">
-        <article id="card-modal-content">
-            <!-- Content loaded via HTMX -->
-        </article>
-    </dialog>
+    <div id="card-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <article id="card-modal-content">
+                <!-- Content loaded via HTMX -->
+            </article>
+        </div>
+    </div>
 
     <!-- Lane Creation Modal -->
-    <dialog id="lane-modal">
-        <article>
-            <header>
-                <a href="#" aria-label="Close" class="close" onclick="closeLaneModal()">×</a>
-                <h3>Create New Lane</h3>
-            </header>
-            <form action="/lanes" method="POST">
-                <label>
-                    Lane Title
-                    <input type="text" name="title" placeholder="Enter lane title..." required autocomplete="off">
-                </label>
-                <footer style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1rem;">
-                    <button type="submit">Create Lane</button>
-                    <button type="button" class="secondary" onclick="closeLaneModal()">Cancel</button>
-                </footer>
-            </form>
-        </article>
-    </dialog>
+    <div id="lane-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <article>
+                <header>
+                    <a href="#" aria-label="Close" class="close" onclick="closeLaneModal()">×</a>
+                    <h3>Create New Lane</h3>
+                </header>
+                <form action="/lanes" method="POST">
+                    <label>
+                        Lane Title
+                        <input type="text" name="title" placeholder="Enter lane title..." required autocomplete="off">
+                    </label>
+                    <footer>
+                        <button type="submit">Create Lane</button>
+                        <button type="button" class="secondary" onclick="closeLaneModal()">Cancel</button>
+                    </footer>
+                </form>
+            </article>
+        </div>
+    </div>
 
     <!-- Category Management Modal -->
-    <dialog id="category-modal">
-        <article>
-            <header>
-                <a href="#" aria-label="Close" class="close" onclick="closeCategoryModal()">×</a>
-                <h3>Manage Categories</h3>
-            </header>
-            <form id="category-form" onsubmit="createCategory(event)">
-                <label>
-                    Category Name
-                    <input type="text" name="name" id="category-name" required>
-                </label>
-                <label>
-                    Color
-                    <input type="color" name="color" id="category-color" value="#3B82F6">
-                </label>
-                <button type="submit">Add Category</button>
-            </form>
-            <div id="categories-list" style="margin-top: 1rem;">
-                <table style="width: 100%; border-collapse: collapse;">
-                    {% for category in categories %}
-                    <tr>
-                        <td style="padding: 0.25rem 0;">
-                            <span class="category-badge" style="background-color: {{ category.color }};">{{ category.name }}</span>
-                        </td>
-                        <td style="width: 30px; text-align: right; padding: 0.25rem 0;">
-                            <button type="button" class="delete-category-btn" onclick="deleteCategory({{ category.id }})" style="background: none; color: #EF4444; border: none; padding: 0; cursor: pointer; font-size: 1.25rem; line-height: 1; font-weight: bold;">×</button>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </article>
-    </dialog>
+    <div id="category-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <article>
+                <header>
+                    <a href="#" aria-label="Close" class="close" onclick="closeCategoryModal()">×</a>
+                    <h3>Manage Categories</h3>
+                </header>
+                <form id="category-form" onsubmit="createCategory(event)">
+                    <label>
+                        Category Name
+                        <input type="text" name="name" id="category-name" required autocomplete="off">
+                    </label>
+                    <label>
+                        Color
+                        <input type="color" name="color" id="category-color" value="#3B82F6">
+                    </label>
+                    <footer>
+                        <button type="submit">Add Category</button>
+                    </footer>
+                </form>
+                <div id="categories-list" style="margin-top: 1rem;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        {% for category in categories %}
+                        <tr>
+                            <td style="padding: 0.25rem 0;">
+                                <span class="category-badge" style="background-color: {{ category.color }};">{{ category.name }}</span>
+                            </td>
+                            <td style="width: 30px; text-align: right; padding: 0.25rem 0;">
+                                <button type="button" class="delete-category-btn" onclick="deleteCategory({{ category.id }})" style="background: none; color: #EF4444; border: none; padding: 0; cursor: pointer; font-size: 1.25rem; line-height: 1; font-weight: bold;">×</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </article>
+        </div>
+    </div>
 
     <!-- Board Management Modal -->
-    <dialog id="board-modal">
-        <article>
+    <div id="board-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <article>
             <header>
                 <a href="#" aria-label="Close" class="close" onclick="closeBoardModal()">×</a>
                 <h3>Manage Boards</h3>
             </header>
 
             <h4>Create New Board</h4>
-            <form action="/boards" method="POST" style="margin-bottom: 2rem;">
+            <form action="/boards" method="POST">
                 <label>
                     Board Name
                     <input type="text" name="name" placeholder="Enter board name..." required autocomplete="off">
@@ -125,43 +134,55 @@
                     Description (optional)
                     <textarea name="description" rows="2" placeholder="Board description..." autocomplete="off"></textarea>
                 </label>
-                <label>
-                    Theme Color
-                    <input type="color" name="color" value="#3B82F6">
-                </label>
-                <button type="submit">Create Board</button>
+                <footer>
+                    <button type="submit">Create Board</button>
+                </footer>
             </form>
 
             <h4>Existing Boards</h4>
             <div id="boards-list">
-                {% for board in boards %}
-                <div class="board-item" style="margin-bottom: 1rem; padding: 1rem; border: 1px solid #CBD5E1; border-radius: 6px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <strong>{{ board.name }}</strong>
-                            {% if current_board and board.id == current_board.id %}
-                            <span style="color: #10B981; font-size: 0.875rem;">(Current)</span>
-                            {% endif %}
-                            <p style="margin: 0.25rem 0; font-size: 0.875rem; color: #64748B;">{{ board.description or 'No description' }}</p>
-                        </div>
-                        <div>
+                <table style="width: 100%; border-collapse: collapse;">
+                    {% for board in boards %}
+                    <tr id="board-row-{{ board.id }}" style="border-bottom: 1px solid #E2E8F0;">
+                        <td style="padding: 1rem 0.5rem; vertical-align: top; width: 100%;">
+                            <div id="board-display-{{ board.id }}">
+                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                                    <strong>{{ board.name }}</strong>
+                                    {% if current_board and board.id == current_board.id %}
+                                    <span style="color: #10B981; font-size: 0.875rem;">(Current)</span>
+                                    {% endif %}
+                                </div>
+                                <p style="margin: 0; font-size: 0.875rem; color: #64748B;">{{ board.description or 'No description' }}</p>
+                            </div>
+                            <div id="board-edit-{{ board.id }}" style="display: none;">
+                                <input type="text" id="board-name-{{ board.id }}" value="{{ board.name }}" style="margin-bottom: 0.5rem;" />
+                                <textarea id="board-desc-{{ board.id }}" rows="2" style="margin-bottom: 0.5rem;">{{ board.description or '' }}</textarea>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button type="button" onclick="saveBoard({{ board.id }})" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">Save</button>
+                                    <button type="button" class="secondary" onclick="cancelEditBoard({{ board.id }})" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">Cancel</button>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="padding: 1rem 0.5rem; text-align: center; white-space: nowrap;">
                             {% if not (current_board and board.id == current_board.id) %}
-                            <form action="/boards/{{ board.id }}/switch" method="POST" style="display: inline;">
-                                <button type="submit" class="secondary" style="margin-right: 0.5rem;">Switch</button>
-                            </form>
+                            <button type="button" onclick="switchToBoard({{ board.id }})" class="secondary" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">Switch</button>
                             {% endif %}
+                        </td>
+                        <td style="padding: 1rem 0.5rem; text-align: center;">
+                            <button type="button" onclick="editBoard({{ board.id }})" style="background: none; color: #3B82F6; border: none; padding: 0; cursor: pointer; font-size: 1.1rem; margin-right: 0.5rem;" title="Edit">✎</button>
+                        </td>
+                        <td style="padding: 1rem 0.5rem; text-align: center; width: 30px;">
                             {% if boards|length > 1 %}
-                            <form action="/boards/{{ board.id }}/delete" method="POST" style="display: inline;" onsubmit="return confirm('Delete this board and all its lanes/cards?');">
-                                <button type="submit" class="delete-btn">Delete</button>
-                            </form>
+                            <button type="button" onclick="deleteBoard({{ board.id }})" style="background: none; color: #EF4444; border: none; padding: 0; cursor: pointer; font-size: 1.25rem; line-height: 1; font-weight: bold;" title="Delete">×</button>
                             {% endif %}
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </table>
             </div>
         </article>
-    </dialog>
+        </div>
+    </div>
 
     <!-- Custom JavaScript -->
     <script src="{{ url_for('static', filename='js/kanban.js') }}"></script>
