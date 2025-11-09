@@ -193,22 +193,59 @@ function loadCategories() {
         .then(response => response.json())
         .then(categories => {
             const categoriesList = document.getElementById('categories-list');
-            categoriesList.innerHTML = categories.map(cat => `
-                <div class="category-item" style="margin-bottom: 0.5rem;">
-                    <span class="category-badge" style="background-color: ${cat.color};">${cat.name}</span>
-                </div>
-            `).join('');
+            categoriesList.innerHTML = `
+                <table style="width: 100%; border-collapse: collapse;">
+                    ${categories.map(cat => `
+                        <tr>
+                            <td style="padding: 0.25rem 0;">
+                                <span class="category-badge" style="background-color: ${cat.color};">${cat.name}</span>
+                            </td>
+                            <td style="width: 30px; text-align: right; padding: 0.25rem 0;">
+                                <button type="button" class="delete-category-btn" onclick="deleteCategory(${cat.id})" style="background: none; color: #EF4444; border: none; padding: 0; cursor: pointer; font-size: 1.25rem; line-height: 1; font-weight: bold;">×</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </table>
+            `;
         })
         .catch(error => {
             console.error('Error loading categories:', error);
         });
 }
 
+function deleteCategory(categoryId) {
+    if (!confirm('Are you sure you want to delete this category?')) {
+        return;
+    }
+
+    fetch(`/categories/${categoryId}`, {
+        method: 'DELETE'
+    })
+    .then(response => {
+        if (response.ok) {
+            // Reload categories list
+            loadCategories();
+
+            // Show success message
+            alert('Category deleted successfully!');
+
+            // Reload the page to update category selects in cards
+            location.reload();
+        } else {
+            throw new Error('Failed to delete category');
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting category:', error);
+        alert('Failed to delete category.');
+    });
+}
+
 // Lane Modal Functions
 function openLaneModal() {
     const modal = document.getElementById('lane-modal');
     modal.showModal();
-    return false; // Prevent default link behavior
+    return false;
 }
 
 function closeLaneModal() {
@@ -217,35 +254,26 @@ function closeLaneModal() {
     return false;
 }
 
-function createLane(event) {
-    event.preventDefault();
+// Board Modal Functions
+function openBoardModal() {
+    const modal = document.getElementById('board-modal');
+    modal.showModal();
+    return false;
+}
 
-    const form = event.target;
-    const formData = new FormData(form);
+function closeBoardModal() {
+    const modal = document.getElementById('board-modal');
+    modal.close();
+    return false;
+}
 
-    fetch('/lanes', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.text())
-    .then(html => {
-        // Add the new lane to the board
-        const board = document.getElementById('board');
-        board.insertAdjacentHTML('beforeend', html);
-
-        // Clear form
-        form.reset();
-
-        // Close modal
-        closeLaneModal();
-
-        // Reinitialize drag and drop
-        initializeDragAndDrop();
-    })
-    .catch(error => {
-        console.error('Error creating lane:', error);
-        alert('Failed to create lane.');
-    });
+function switchBoard(boardId) {
+    // Submit form to switch board
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/boards/${boardId}/switch`;
+    document.body.appendChild(form);
+    form.submit();
 }
 
 // Close modals on ESC key (native behavior for dialog element)
@@ -254,6 +282,7 @@ document.addEventListener('click', function(event) {
     const cardModal = document.getElementById('card-modal');
     const categoryModal = document.getElementById('category-modal');
     const laneModal = document.getElementById('lane-modal');
+    const boardModal = document.getElementById('board-modal');
 
     if (event.target === cardModal) {
         closeCardModal();
@@ -263,6 +292,9 @@ document.addEventListener('click', function(event) {
     }
     if (event.target === laneModal) {
         closeLaneModal();
+    }
+    if (event.target === boardModal) {
+        closeBoardModal();
     }
 });
 

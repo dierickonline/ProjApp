@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import Lane, Card, Category
+from app.models import Board, Lane, Card, Category
 
 app = create_app()
 
@@ -16,6 +16,15 @@ def seed_db():
     db.drop_all()
     db.create_all()
 
+    # Create default board
+    board = Board(
+        name='Main Project',
+        description='Default Kanban board for your main project',
+        color='#3B82F6'
+    )
+    db.session.add(board)
+    db.session.commit()
+
     # Create categories
     categories = [
         Category(name='Bug', color='#EF4444'),        # Red
@@ -30,12 +39,12 @@ def seed_db():
 
     db.session.commit()
 
-    # Create lanes
+    # Create lanes for the board
     lanes = [
-        Lane(title='To Do', position=1.0),
-        Lane(title='In Progress', position=2.0),
-        Lane(title='Review', position=3.0),
-        Lane(title='Done', position=4.0)
+        Lane(title='To Do', position=1.0, board_id=board.id),
+        Lane(title='In Progress', position=2.0, board_id=board.id),
+        Lane(title='Review', position=3.0, board_id=board.id),
+        Lane(title='Done', position=4.0, board_id=board.id)
     ]
 
     for lane in lanes:
@@ -113,6 +122,7 @@ def seed_db():
     db.session.commit()
 
     print("Database seeded successfully!")
+    print(f"Created 1 board: '{board.name}'")
     print(f"Created {len(categories)} categories")
     print(f"Created {len(lanes)} lanes")
     print(f"Created {len(cards)} cards")

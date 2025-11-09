@@ -9,7 +9,10 @@
       "Bash(python add_feature_cards.py:*)",
       "Bash(call venvScriptsactivate.bat)",
       "Bash(venv\\Scripts\\python.exe:*)",
-      "Bash(./venv/Scripts/python.exe:*)"
+      "Bash(./venv/Scripts/python.exe:*)",
+      "Bash(\"d:\\Projects\\ProjApp\\venv\\Scripts\\python.exe\" -m flask:*)",
+      "Bash(python -m flask:*)",
+      "Bash(python migrate_to_boards.py:*)"
     ],
     "deny": [],
     "ask": []

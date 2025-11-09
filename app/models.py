@@ -7,6 +7,32 @@ card_categories = db.Table('card_categories',
     db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
 )
 
+class Board(db.Model):
+    """Board containing lanes and cards for a project"""
+    __tablename__ = 'boards'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, default='')
+    color = db.Column(db.String(7), default='#3B82F6')  # Hex color code for theme
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationship - cascade delete lanes when board is deleted
+    lanes = db.relationship('Lane', backref='board', lazy=True,
+                          cascade='all, delete-orphan', order_by='Lane.position')
+
+    def to_dict(self):
+        """Convert board to dictionary"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'color': self.color,
+            'created_at': self.created_at.isoformat(),
+            'lane_count': len(self.lanes)
+        }
+
 class Lane(db.Model):
     """Lane (column) on the Kanban board"""
     __tablename__ = 'lanes'
@@ -14,6 +40,7 @@ class Lane(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     position = db.Column(db.Float, nullable=False)
+    board_id = db.Column(db.Integer, db.ForeignKey('boards.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
