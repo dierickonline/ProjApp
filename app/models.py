@@ -1,11 +1,46 @@
 from datetime import datetime
 from app import db
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Association table for many-to-many relationship between cards and categories
 card_categories = db.Table('card_categories',
     db.Column('card_id', db.Integer, db.ForeignKey('cards.id'), primary_key=True),
     db.Column('category_id', db.Integer, db.ForeignKey('categories.id'), primary_key=True)
 )
+
+class User(UserMixin, db.Model):
+    """User model for authentication"""
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    is_verified = db.Column(db.Boolean, default=False)
+    verification_token = db.Column(db.String(100), unique=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationship with boards
+    boards = db.relationship('Board', backref='owner', lazy=True, cascade='all, delete-orphan')
+
+    def set_password(self, password):
+        """Hash and set password"""
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        """Check if password matches hash"""
+        return check_password_hash(self.password_hash, password)
+
+    def to_dict(self):
+        """Convert user to dictionary"""
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'is_verified': self.is_verified,
+            'created_at': self.created_at.isoformat()
+        }
 
 class Board(db.Model):
     """Board containing lanes and cards for a project"""
@@ -15,6 +50,7 @@ class Board(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, default='')
     color = db.Column(db.String(7), default='#3B82F6')  # Hex color code for theme
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

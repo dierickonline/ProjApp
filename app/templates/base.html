@@ -35,12 +35,33 @@
                 {% endif %}
             </div>
             <div class="nav-links">
+                {% if current_user.is_authenticated %}
                 <a href="#" onclick="openLaneModal()">New Lane</a>
                 <a href="#" onclick="openBoardModal()">Boards</a>
                 <a href="#" onclick="openCategoryModal()">Categories</a>
+                <span style="margin: 0 10px; color: #666;">|</span>
+                <span style="color: #333;">{{ current_user.username }}</span>
+                <a href="{{ url_for('auth.logout') }}">Logout</a>
+                {% else %}
+                <a href="{{ url_for('auth.login') }}">Login</a>
+                <a href="{{ url_for('auth.register') }}">Register</a>
+                {% endif %}
             </div>
         </div>
     </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages" style="max-width: 1200px; margin: 20px auto; padding: 0 20px;">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" style="padding: 12px 20px; margin-bottom: 10px; border-radius: 5px; {% if category == 'danger' %}background-color: #fee; border-left: 4px solid #f00; color: #c00;{% elif category == 'success' %}background-color: #efe; border-left: 4px solid #0a0; color: #060;{% elif category == 'warning' %}background-color: #ffe; border-left: 4px solid #fa0; color: #860;{% else %}background-color: #eef; border-left: 4px solid #00a; color: #006;{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     {% block content %}{% endblock %}
    

@@ -16,7 +16,16 @@
       "Bash(cat:*)",
       "Bash(tasklist:*)",
       "Bash(sqlite3:*)",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(venv\\Scripts\\python.exe -m pip:*)",
+      "Bash(python -m pip install:*)",
+      "Bash(pip install:*)",
+      "Bash(pip show:*)",
+      "Bash(C:UserssteveAppDataLocalProgramsPythonPython310python.exe -m flask db init)",
+      "Bash(\"C:\\Users\\steve\\AppData\\Local\\Programs\\Python\\Python310\\python.exe\" -m flask db init)",
+      "Bash(\"C:\\Users\\steve\\AppData\\Local\\Programs\\Python\\Python310\\python.exe\" -m flask db migrate -m \"Add user authentication\")",
+      "Bash(\"C:\\Users\\steve\\AppData\\Local\\Programs\\Python\\Python310\\python.exe\" -m flask db upgrade)",
+      "Bash(\"C:\\Users\\steve\\AppData\\Local\\Programs\\Python\\Python310\\python.exe\" -m flask run --debug)"
     ],
     "deny": [],
     "ask": []

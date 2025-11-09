@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Kanban Board{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2 style="text-align: center;">Sign in to your account</h2>
+        <p style="text-align: center; margin-bottom: 2rem;">
+            Or
+            <a href="{{ url_for('auth.register') }}">create a new account</a>
+        </p>
+
+        <form method="POST">
+            <div style="margin-bottom: 1rem;">
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" required placeholder="Enter your username">
+            </div>
+
+            <div style="margin-bottom: 1rem;">
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" required placeholder="Enter your password">
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center;">
+                    <input id="remember" name="remember" type="checkbox" style="width: auto; margin-right: 0.5rem;">
+                    <label for="remember" style="margin: 0; font-weight: normal;">Remember me</label>
+                </div>
+
+                <div>
+                    <a href="{{ url_for('auth.resend_verification') }}" style="font-size: 0.875rem;">Resend verification</a>
+                </div>
+            </div>
+
+            <button type="submit">Sign in</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
